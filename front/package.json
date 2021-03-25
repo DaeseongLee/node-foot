@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next -p 3075"
   },
   "author": "lee",
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
+    "antd": "^4.14.1",
     "next": "^10.0.9",
     "next-redux-saga": "^4.1.2",
     "next-redux-wrapper": "^6.0.2",
