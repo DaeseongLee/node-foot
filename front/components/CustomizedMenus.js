@@ -10,6 +10,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import { makeStyles } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link';
 const useStyles = makeStyles((theme) => ({
     logo: {
         backgroundColor: 'transparent',
@@ -79,25 +80,27 @@ export default function CustomizedMenus() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <PermIdentityIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="profile" onClick={handleClose} />
-                </StyledMenuItem>
+                <Link href="/profile" variant="body2">
+                    <StyledMenuItem>
+                        <ListItemIcon>
+                            <PermIdentityIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="내정보" onClick={handleClose} />
+                    </StyledMenuItem>
+                </Link>
                 <StyledMenuItem>
                     <ListItemIcon>
                         <MeetingRoomIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText primary="makeRoom" onClick={handleClose} />
+                    <ListItemText primary="방만들기 OR 방나가기" onClick={handleClose} />
                 </StyledMenuItem>
                 <StyledMenuItem>
                     <ListItemIcon>
                         <InboxIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText primary="logout" onClick={handleClose} />
+                    <ListItemText primary="로그가웃" onClick={handleClose} />
                 </StyledMenuItem>
             </StyledMenu>
-        </div>
+        </div >
     );
 }
