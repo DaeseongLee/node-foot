@@ -1,64 +1,132 @@
 import React from 'react';
-import AppLayout from '../components/AppLayout';
-
-import Link from '@material-ui/core/Link';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Title from '../components/Title';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import FolderIcon from '@material-ui/icons/Folder';
+
+import AppLayout from '../components/AppLayout';
+import Title from '../components/Title';
+
 
 const useStyles = makeStyles((theme) => ({
-    seeMore: {
-        marginTop: theme.spacing(3),
+    profile: {
+        display: 'flex',
     },
-}));
+    info: {
+        marginRight: '2rem',
+    },
+    demo: {
+        backgroundColor: theme.palette.background.paper,
+    },
+}))
 
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-    return { id, date, name, shipTo, paymentMethod, amount };
+function generate(element) {
+    return [0, 1, 2].map((value) =>
+        React.cloneElement(element, {
+            key: value,
+        }),
+    );
 }
 
-const rows = [
-    createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-    createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-    createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-    createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-    createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-];
+
 const Profile = () => {
     const classes = useStyles();
     return (
         <AppLayout>
-            <Title>참가자 명단</Title>
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>A팀</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell>B팀</TableCell>
-                        <TableCell></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>참가자</TableCell>
-                        <TableCell>소속</TableCell>
-                        <TableCell>참가자</TableCell>
-                        <TableCell>소속</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell>{row.date}</TableCell>
-                            <TableCell>{row.name}</TableCell>
-                            <TableCell>{row.shipTo}</TableCell>
-                            <TableCell>{row.paymentMethod}</TableCell>
-                            <TableCell align="right">{row.amount}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+            <div className={classes.profile}>
+                <div className={classes.info}>
+                    <Title>개인정보</Title>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                required
+                                id="location"
+                                name="location"
+                                label="Location"
+                                fullWidth
+                                autoComplete="location"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                id="date"
+                                name="date"
+                                type="date"
+                                label="Date"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                id="startTime"
+                                name="startTime"
+                                type="time"
+                                label="StartTime"
+                                defaultValue="00:00"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                id="toTime"
+                                name="toTime"
+                                type="time"
+                                defaultValue="00:00"
+                                label="ToTime"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                required
+                                id="number"
+                                name="number"
+                                label="Number"
+                                type="number"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                required
+                                id="note"
+                                name="note"
+                                label="Note"
+                                fullWidth
+                                autoComplete="Note"
+                            />
+                        </Grid>
+                    </Grid>
+                </div>
+                <div className={classes.roomList}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={12}>
+                            <Title>방 참가 리스트</Title>
+                            <div className={classes.demo}>
+                                <List >
+                                    {generate(
+                                        <ListItem>
+                                            <ListItemIcon>
+                                                <FolderIcon />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primary="Single-line item"
+                                            />
+                                        </ListItem>,
+                                    )}
+                                </List>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </div>
+            </div>
         </AppLayout>
     )
 };

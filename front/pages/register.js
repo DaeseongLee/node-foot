@@ -1,4 +1,9 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
+
+import useInput from '../hooks/useInput.js';
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,46 +15,46 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-      </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import { Copyright, useStyles } from './registerStyle';
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: '#1769aa',
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(3),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-        backgroundColor: '#1769aa',
-    },
-}));
+const Register = () => {
+    const [email, setEmail, handleEmail] = useInput('');
+    const [name, setName, handleName] = useInput('');
+    const [password, setPassword, handlePassword] = useInput('');
+    const [passwordConfirm, setConfirmPassword, handleConfirmPassword] = useInput('');
+    const [phone, setPhone, handlePhone] = useInput('');
+    const [check, setCheck] = useState(false);
 
-export default function Register() {
+    const [emptyError, setEmptyError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [checkError, setCheckError] = useState(false);
+
     const classes = useStyles();
+    // const dispatch = useDispatch();
 
+    const handleSubmit = useCallback((event) => {
+        event.preventDefault();
+        if (!(email && name && password && passwordConfirm && phone)) {
+            return setEmptyError(true);
+        };
+
+        if (password !== passwordConfirm) {
+            return setPasswordError(true);
+        };
+        if (!check) {
+            return setCheckError(true);
+        };
+        setEmptyError(false);
+        setPasswordError(false);
+        setCheckError(false);
+
+    }, [email, name, password, passwordConfirm, phone, check]);
+
+    const handleCheck = useCallback(() => {
+        setCheck((prev) => !prev);
+    }, [check]);
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -60,7 +65,7 @@ export default function Register() {
                 <Typography component="h1" variant="h5">
                     Sign up
         </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} noValidate onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
@@ -71,6 +76,20 @@ export default function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                onChange={handleEmail}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="name"
+                                label="Name"
+                                type="name"
+                                id="name"
+                                autoComplete="name"
+                                onChange={handleName}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -83,6 +102,7 @@ export default function Register() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                onChange={handlePassword}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -95,6 +115,7 @@ export default function Register() {
                                 type="password"
                                 id="password_confirm"
                                 autoComplete="current-password"
+                                onChange={handleConfirmPassword}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -107,15 +128,19 @@ export default function Register() {
                                 type="phone"
                                 id="phone"
                                 autoComplete="phone"
+                                onChange={handlePhone}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <FormControlLabel
-                                control={<Checkbox value="allowExtraEmails" color="primary" />}
+                                control={<Checkbox value="allowExtraEmails" color="primary" onChange={handleCheck} />}
                                 label="활동 열심하겠습니다."
                             />
                         </Grid>
                     </Grid>
+                    {emptyError && <div className={classes.valid}>입력되지 않은 사항이 있습니다.</div>}
+                    {passwordError && <div className={classes.valid}>비밀번호와 비밀번호 확인이 다릅니다.</div>}
+                    {checkError && <div className={classes.valid}>활동 열심히 한다고 체크 안할 겁니까?</div>}
                     <Button
                         type="submit"
                         fullWidth
@@ -140,3 +165,5 @@ export default function Register() {
         </Container>
     );
 }
+
+export default Register;

@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import Link from '@material-ui/core/Link';
 import CustomizedMenus from './CustomizedMenus';
 
 
@@ -21,14 +22,23 @@ const useStyles = makeStyles((theme) => ({
     menuButton: {
         marginRight: theme.spacing(2),
     },
-    title: {
+    link: {
         color: 'white',
-        flexGrow: 1,
         display: 'none',
+        textDecoration: 'none',
         [theme.breakpoints.up('sm')]: {
             display: 'block',
         },
+        marginRight: '2rem',
     },
+    // title: {
+    //     color: 'white',
+    //     flexGrow: 1,
+    //     display: 'none',
+    //     [theme.breakpoints.up('sm')]: {
+    //         display: 'block',
+    //     },
+    // },
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
@@ -79,10 +89,11 @@ export default function AppLayout({ children }) {
             <AppBar position="static">
                 <Toolbar className={classes.toolbar}>
                     <CustomizedMenus />
-                    <Typography className={classes.title} variant="h6" noWrap>
-                        Football
-                    </Typography>
 
+
+                    <Typography className={classes.title} variant="h6" noWrap>
+                        <Link href="/" className={classes.link}>Football</Link>
+                    </Typography>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />

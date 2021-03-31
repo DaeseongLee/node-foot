@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -11,6 +11,13 @@ import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+
 const useStyles = makeStyles((theme) => ({
     logo: {
         backgroundColor: 'transparent',
@@ -51,18 +58,46 @@ const StyledMenuItem = withStyles((theme) => ({
 export default function CustomizedMenus() {
     const classes = useStyles();
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedStartTime, setStartTimeChange] = useState('');
+    const [selectedToTime, setToTimeChange] = useState('');
 
-    const handleClick = (event) => {
-        console.log(event.currentTarget);
+    const handleClick = useCallback((event) => {
         setAnchorEl(event.currentTarget);
-    };
+    }, []);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setAnchorEl(null);
-    };
+        setOpen(false);
+    }, []);
+
+
+    const handleMakeRoomOpen = useCallback(() => {
+        setAnchorEl(null);
+        setOpen(true);
+    }, []);
+
+    const makeRoom = useCallback(() => { }, []);
+
+    const handleDateChange = useCallback((date) => {
+        console.log(date);
+        setSelectedDate(date);
+    }, []);
+
+    const handleStartTimeChange = useCallback((time) => {
+        console.log(time);
+        setStartTimeChange(time);
+    }, []);
+
+    const handleToTimeChange = useCallback((time) => {
+        console.log(time);
+        setToTimeChange(time);
+    }, []);
+    console.log(new Date().getDate());
     return (
-        <div>
+        <>
             <Button
                 aria-controls="customized-menu"
                 aria-haspopup="true"
@@ -92,7 +127,7 @@ export default function CustomizedMenus() {
                     <ListItemIcon>
                         <MeetingRoomIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText primary="방만들기 OR 방나가기" onClick={handleClose} />
+                    <ListItemText primary="방만들기 OR 방나가기" onClick={handleMakeRoomOpen} />
                 </StyledMenuItem>
                 <StyledMenuItem>
                     <ListItemIcon>
@@ -101,6 +136,84 @@ export default function CustomizedMenus() {
                     <ListItemText primary="로그가웃" onClick={handleClose} />
                 </StyledMenuItem>
             </StyledMenu>
-        </div >
+
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">방만들기</DialogTitle>
+                <DialogContent>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                required
+                                id="location"
+                                name="location"
+                                label="Location"
+                                fullWidth
+                                autoComplete="location"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                id="date"
+                                name="date"
+                                type="date"
+                                label="Date"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                id="startTime"
+                                name="startTime"
+                                type="time"
+                                label="StartTime"
+                                defaultValue="00:00"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                id="toTime"
+                                name="toTime"
+                                type="time"
+                                defaultValue="00:00"
+                                label="ToTime"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                required
+                                id="number"
+                                name="number"
+                                label="Number"
+                                type="number"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                required
+                                id="note"
+                                name="note"
+                                label="Note"
+                                fullWidth
+                                autoComplete="Note"
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        취 소
+                    </Button>
+                    <Button onClick={makeRoom} color="primary">
+                        방 생성
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 }
