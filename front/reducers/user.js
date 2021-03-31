@@ -1,8 +1,19 @@
+import produce from '../util/produce';
+
 export const initialState = {
+    logInLoading: false,
+    logInDone: false,
+    logInError: null,
     signUpLoading: false,
     signUpDone: false,
     signUpError: null,
+    loginUser: null,
 }
+
+
+export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
+export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
+export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
@@ -18,33 +29,25 @@ const dummyUser = (data) => ({
     Rooms: [{ id: 1 }],
 })
 
-const reducer = (state = initialState, action) => {
+const reducer = (state = initialState, action) => produce(state, (draft) => {
     switch (action.type) {
         case SIGN_UP_REQUEST:
-            return {
-                ...state,
-                signUpLoading: true,
-                signUpDone: false,
-                signUpError: false,
-            }
+            draft.signUpLoading = true;
+            draft.signUpDone = false;
+            draft.signUpError = null;
+            break;
         case SIGN_UP_SUCCESS:
-            return {
-                ...state,
-                signUpLoading: false,
-                signUpDone: true,
-                signUpError: false,
-            }
+            draft.signUpLoading = false;
+            draft.signUpDone = true;
+            draft.signUpError = null;
+            break;
         case SIGN_UP_FAILURE:
-            return {
-                ...state,
-                signUpLoading: false,
-                signUpError: action.error,
-            }
-        default: {
-            return {
-                ...state,
-            }
-        }
+            draft.signUpLoading = false;
+            draft.signUpError = action.error;
+            break;
+        default:
+            break;
     }
-}
+});
+
 export default reducer;
