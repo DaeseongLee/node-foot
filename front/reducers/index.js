@@ -5,7 +5,6 @@ import user from './user';
 
 const rootReducer = combineReducers({
     index: (state = {}, action) => {
-        console.log('(reducer>index>action)', action)
         switch (action.type) {
             case HYDRATE:
                 console.log('reducer>index>HYDRATE)', HYDRATE);

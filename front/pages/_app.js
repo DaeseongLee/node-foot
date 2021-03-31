@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
+import withReduxSaga from 'next-redux-saga';
 
-
+import wrapper from '../store/configureStore';
 
 const NodeBird = ({ Component }) => {
     return (
@@ -18,4 +19,4 @@ const NodeBird = ({ Component }) => {
 NodeBird.propTypes = {
     Component: PropTypes.elementType.isRequired
 }
-export default NodeBird;
+export default wrapper.withRedux(withReduxSaga(NodeBird));

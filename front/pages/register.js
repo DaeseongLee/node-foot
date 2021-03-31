@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
 import { Copyright, useStyles } from './registerStyle';
+import { SIGN_UP_REQUEST } from '../reducers/user.js';
 
 const Register = () => {
     const [email, setEmail, handleEmail] = useInput('');
@@ -32,23 +33,34 @@ const Register = () => {
     const [checkError, setCheckError] = useState(false);
 
     const classes = useStyles();
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const handleSubmit = useCallback((event) => {
         event.preventDefault();
+        setEmptyError(false);
         if (!(email && name && password && passwordConfirm && phone)) {
             return setEmptyError(true);
         };
 
+        setPasswordError(false);
         if (password !== passwordConfirm) {
             return setPasswordError(true);
         };
+
+        setCheckError(false);
         if (!check) {
             return setCheckError(true);
         };
-        setEmptyError(false);
-        setPasswordError(false);
-        setCheckError(false);
+
+        dispatch({
+            type: SIGN_UP_REQUEST,
+            data: {
+                email,
+                name,
+                password,
+                phone,
+            }
+        })
 
     }, [email, name, password, passwordConfirm, phone, check]);
 

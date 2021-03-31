@@ -18,27 +18,33 @@ const dummyUser = (data) => ({
     Rooms: [{ id: 1 }],
 })
 
-const reducer = (state = initailState, action) {
+const reducer = (state = initialState, action) => {
     switch (action.type) {
         case SIGN_UP_REQUEST:
             return {
                 ...state,
-                signUpLoading = true,
-                signUpDone = false,
-                signUpError = false,
+                signUpLoading: true,
+                signUpDone: false,
+                signUpError: false,
             }
         case SIGN_UP_SUCCESS:
             return {
                 ...state,
-                signUpLoading = false,
-                signUpDone = true,
-                signUpError = false,
+                signUpLoading: false,
+                signUpDone: true,
+                signUpError: false,
             }
         case SIGN_UP_FAILURE:
             return {
                 ...state,
-                signUpLoading = false,
-                signUpError = action.error,
+                signUpLoading: false,
+                signUpError: action.error,
             }
+        default: {
+            return {
+                ...state,
+            }
+        }
     }
 }
+export default reducer;

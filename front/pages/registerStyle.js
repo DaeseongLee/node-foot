@@ -6,7 +6,7 @@ export function Copyright() {
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             Welcome
-            {new Date().getFullYear()}
+            {''}{new Date().getFullYear()}
             {'.'}
         </Typography>
     );
