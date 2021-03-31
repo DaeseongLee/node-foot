@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,42 +11,30 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'WELCOME '}
-            {new Date().getFullYear()}
-        </Typography>
-    );
-}
+import useInput from '../hooks/useInput';
+import { LOG_IN_REQUEST } from '../reducers/user';
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: '#1769aa',
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-        backgroundColor: '#1769aa',
-    },
-}));
+import { Copyright, useStyles } from './loginStyle';
 
 const Login = () => {
+    const [email, setEmail, handleEmail] = useInput('');
+    const [password, setPassword, handlePassword] = useInput('');
+    const dispatch = useDispatch();
+
     const classes = useStyles();
 
+    const handleSubmit = useCallback((event) => {
+        event.preventDefault();
+        dispatch({
+            type: LOG_IN_REQUEST,
+            data: {
+                email,
+                password
+            }
+        })
+    }, [email, password]);
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -56,7 +45,7 @@ const Login = () => {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} noValidate onSubmit={handleSubmit}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -67,6 +56,7 @@ const Login = () => {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        onChange={handleEmail}
                     />
                     <TextField
                         variant="outlined"
@@ -78,6 +68,7 @@ const Login = () => {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        onChange={handlePassword}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}

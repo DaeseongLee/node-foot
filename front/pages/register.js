@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 
@@ -34,6 +34,14 @@ const Register = () => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
+    const { loginUser } = useSelector(state => state.user);
+
+    useEffect(() => {
+        if (loginUser) {
+            alert('로그인된 상태이기때문에 메인페이지로 이동합니다')
+            Router.push('/');
+        }
+    }, [loginUser])
 
     const handleSubmit = useCallback((event) => {
         event.preventDefault();
