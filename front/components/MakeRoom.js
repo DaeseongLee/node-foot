@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 
 import { MAKE_ROOM_REQUEST } from '../reducers/room';
 
-const MakeRoom = ({ open, handleClose }) => {
+const MakeRoom = ({ open, setClose }) => {
     const [location, setlocation, handleLocation] = useInput('')
     const [date, setDate, handleDate] = useInput(moment().format('yyyy-MM-DD'))
     const [startTime, setStartTime, handleStartTime] = useInput(moment().format('HH:00'));
@@ -23,6 +23,7 @@ const MakeRoom = ({ open, handleClose }) => {
 
     const dispatch = useDispatch();
     const makeRoom = useCallback(() => {
+        setClose(false);
         dispatch({
             type: MAKE_ROOM_REQUEST,
             data: {
@@ -36,6 +37,10 @@ const MakeRoom = ({ open, handleClose }) => {
         })
 
     }, [location, date, startTime, endTime, number, notion]);
+
+    const handleClose = useCallback(() => {
+        setClose(false);
+    }, [])
     return (
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">방만들기</DialogTitle>

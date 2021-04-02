@@ -1,4 +1,6 @@
 import React, { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -10,10 +12,11 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import { makeStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import Router from 'next/router';
 
 
 import MakeRoom from './MakeRoom';
+import { LOG_OUT_REQUEST } from '../reducers/user';
 
 const useStyles = makeStyles((theme) => ({
     logo: {
@@ -55,6 +58,8 @@ const StyledMenuItem = withStyles((theme) => ({
 export default function CustomizedMenus() {
     const classes = useStyles();
 
+    const dispatch = useDispatch();
+    const { logOutLoading } = useSelector(state => state.user);
     const [anchorEl, setAnchorEl] = useState(null);
     const [open, setOpen] = useState(false);
 
@@ -62,11 +67,25 @@ export default function CustomizedMenus() {
         setAnchorEl(event.currentTarget);
     }, []);
 
-    const handleClose = useCallback(() => {
+    const handleClose = useCallback((event) => {
         setAnchorEl(null);
-        setOpen(false);
+        // setOpen(false);
     }, []);
 
+    const handleProfile = useCallback(() => {
+        setAnchorEl(null);
+        // setOpen(false);
+        Router.push('/profile');
+    }, []);
+    const handlelLogout = useCallback((event) => {
+        setAnchorEl(null);
+        // setOpen(false);
+
+        dispatch({
+            type: LOG_OUT_REQUEST,
+        })
+
+    }, []);
 
     const handleMakeRoomOpen = useCallback(() => {
         setAnchorEl(null);
@@ -83,6 +102,7 @@ export default function CustomizedMenus() {
                 color="primary"
                 className={classes.logo}
                 onClick={handleClick}
+                disabled={logOutLoading}
             >
                 <MenuIcon />
             </Button>
@@ -93,14 +113,13 @@ export default function CustomizedMenus() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <Link href="/profile" variant="body2">
-                    <StyledMenuItem>
-                        <ListItemIcon>
-                            <PermIdentityIcon fontSize="small" />
-                        </ListItemIcon>
-                        <ListItemText primary="내정보" onClick={handleClose} />
-                    </StyledMenuItem>
-                </Link>
+
+                <StyledMenuItem>
+                    <ListItemIcon>
+                        <PermIdentityIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText primary="내정보" onClick={handleProfile} />
+                </StyledMenuItem>
                 <StyledMenuItem>
                     <ListItemIcon>
                         <MeetingRoomIcon fontSize="small" />
@@ -111,10 +130,10 @@ export default function CustomizedMenus() {
                     <ListItemIcon>
                         <InboxIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText primary="로그아웃" onClick={handleClose} />
+                    <ListItemText primary="로그아웃" name='logout' onClick={handlelLogout} />
                 </StyledMenuItem>
             </StyledMenu>
-            <MakeRoom open={open} handleClose={handleClose} />
+            <MakeRoom open={open} setClose={setOpen} />
         </>
     );
 }

@@ -1,5 +1,7 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -19,11 +21,23 @@ import { LOG_IN_REQUEST } from '../reducers/user';
 import { Copyright, useStyles } from './loginStyle';
 
 const Login = () => {
+    const dispatch = useDispatch();
     const [email, setEmail, handleEmail] = useInput('');
     const [password, setPassword, handlePassword] = useInput('');
-    const dispatch = useDispatch();
+    const { loginUser, logInError, logInLoading } = useSelector((state) => state.user);
 
     const classes = useStyles();
+
+    useEffect(() => {
+        if (logInError) {
+            alert(loginError);
+        }
+
+        if (loginUser) {
+            Router.push('/');
+        }
+
+    }, [loginUser])
 
     const handleSubmit = useCallback((event) => {
         event.preventDefault();
@@ -45,7 +59,7 @@ const Login = () => {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate onSubmit={handleSubmit}>
+                <form className={classes.form} validate='true' onSubmit={handleSubmit}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -80,14 +94,17 @@ const Login = () => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        disabled={logInLoading}
                     >
                         Sign In
           </Button>
                     <Grid container>
                         <Grid item>
-                            <Link href="/register" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
+                            <Button disabled={logInLoading}>
+                                <Link href="/register" variant="body2" disabled={logInLoading}>
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Button>
                         </Grid>
                     </Grid>
                 </form>

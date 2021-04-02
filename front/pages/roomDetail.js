@@ -7,7 +7,7 @@ import Title from '../components/Title';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-
+import Button from '@material-ui/core/Button';
 const useStyles = makeStyles((theme) => ({
     roomDetail: {
         display: 'flex',
@@ -53,8 +53,16 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     item: {
-        width: '50%',
+        width: '30%',
         marginBottom: '0.5rem',
+        alignItems: 'center',
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+
+        },
+    },
+    itemList: {
+        width: '100%',
     },
     card: {
         display: 'flex',
@@ -64,6 +72,10 @@ const useStyles = makeStyles((theme) => ({
         width: 160,
 
     },
+    join: {
+        marginRight: '1rem',
+    },
+
 }));
 
 function createData(id, name, desc) {
@@ -122,14 +134,32 @@ export default function FeaturedPost() {
                     <div className={classes.grid} >
                         {rows.map(row =>
                             <div className={classes.item}>
-                                <Chip avatar={<Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />}
+                                <Chip className={classes.itemList} avatar={<Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />}
                                     label={row.name}
                                     onDelete={handleDelete}
 
                                 />
                             </div>
                         )}
-
+                    </div>
+                    <div className={classes.btn}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={false}
+                            className={classes.join}
+                        >
+                            참가하기
+                    </Button>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={false}
+                        >
+                            나가기 {' '}
+                        </Button>
                     </div>
                 </div>
             </div>

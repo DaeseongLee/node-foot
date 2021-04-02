@@ -7,9 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import Link from '@material-ui/core/Link';
+import Link from 'next/link';
 import CustomizedMenus from './CustomizedMenus';
-
+import IconButton from '@material-ui/core/IconButton';
+import HomeIcon from '@material-ui/icons/Home';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,14 +23,15 @@ const useStyles = makeStyles((theme) => ({
     menuButton: {
         marginRight: theme.spacing(2),
     },
-    link: {
-        color: 'white',
-        display: 'none',
-        textDecoration: 'none',
+    Home: {
+
         [theme.breakpoints.up('sm')]: {
             display: 'block',
+            marginRight: '0.5rem',
+            color: '#00a1ff',
         },
-        marginRight: '2rem',
+        marginleft: '0',
+        marginRight: '5rem',
     },
     // title: {
     //     color: 'white',
@@ -89,10 +91,12 @@ export default function AppLayout({ children }) {
             <AppBar position="static">
                 <Toolbar className={classes.toolbar}>
                     <CustomizedMenus />
-
-
                     <Typography className={classes.title} variant="h6" noWrap>
-                        <Link href="/" className={classes.link}>Football</Link>
+                        <IconButton aria-label="home" className={classes.Home}>
+                            <Link href="/" style={{ color: 'red', textDecoration: 'none' }} >
+                                <HomeIcon style={{ fontSize: 50 }} />
+                            </Link>
+                        </IconButton>
                     </Typography>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>

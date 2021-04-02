@@ -34,14 +34,17 @@ const Register = () => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { loginUser } = useSelector(state => state.user);
+    const { loginUser, signUpLoading, signUpError } = useSelector(state => state.user);
 
     useEffect(() => {
         if (loginUser) {
             alert('로그인된 상태이기때문에 메인페이지로 이동합니다')
             Router.push('/');
         }
-    }, [loginUser])
+        if (signUpError) {
+            alert(signUpError);
+        }
+    }, [loginUser, signUpError])
 
     const handleSubmit = useCallback((event) => {
         event.preventDefault();
@@ -167,14 +170,17 @@ const Register = () => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        disabled={signUpLoading}
                     >
                         Sign Up
           </Button>
                     <Grid container justify="flex-end">
-                        <Grid item>
-                            <Link href="/login" variant="body2">
-                                Already have an account? Sign in
-              </Link>
+                        <Grid item disabled={signUpLoading}>
+                            <Button disabled={signUpLoading}>
+                                <Link href="/login" variant="body2">
+                                    Already have an account? Sign in
+                                </Link>
+                            </Button>
                         </Grid>
                     </Grid>
                 </form>
