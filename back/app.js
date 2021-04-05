@@ -8,20 +8,23 @@ const morgan = require('morgan');
 const path = require('path');
 
 const userRouter = require('./routes/user');
-
 const { sequelize } = require('./models');
+const passportConfig = require('./passport');
 
+console.log('passportConfig', passportConfig);
 dotenv.config();
 const app = express();
 app.set('port', process.env.PORT || 3065);
 
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
     .then(() => {
         console.log('데이터베이스 연결 성공')
     })
     .catch(e => {
         console.error(e);
     });
+passportConfig();
+
 app.use(morgan('dev'));
 app.use(cors({
     origin: 'http://localhost:3075',
@@ -37,6 +40,8 @@ app.use(session({
     resave: false,
     secret: process.env.COOKIE_SECRET,
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
     res.send("hello express");
