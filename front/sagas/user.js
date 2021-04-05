@@ -24,8 +24,8 @@ function loginAPI(data) {
 }
 
 
-function loginOut() {
-    return axios.post('/api/logout');
+function logOutAPI() {
+    return axios.post('/user/logout');
 }
 
 
@@ -44,13 +44,11 @@ function uploadAPI() {
 function* logIn(action) {
     try {
         const result = yield call(loginAPI, action.data);
-        console.log('login Success', result);
         yield put({
             type: LOG_IN_SUCCESS,
             data: result.data
         })
     } catch (error) {
-        console.error(error);
         yield put({
             type: LOG_IN_FAILURE,
             error: error.response.data,
@@ -61,10 +59,9 @@ function* logIn(action) {
 
 function* logOut(action) {
     try {
-        // yield call(loginOut, action.data);
+        yield call(logOutAPI);
         yield put({
             type: LOG_OUT_SUCCESS,
-            data: action.data
         })
     } catch (error) {
         console.error(error);
@@ -77,7 +74,6 @@ function* logOut(action) {
 
 function* signUp(action) {
     try {
-
         const result = yield call(signUpAPI, action.data);
         yield put({
             type: SIGN_UP_SUCCESS,
