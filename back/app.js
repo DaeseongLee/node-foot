@@ -11,7 +11,6 @@ const userRouter = require('./routes/user');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
-console.log('passportConfig', passportConfig);
 dotenv.config();
 const app = express();
 app.set('port', process.env.PORT || 3065);

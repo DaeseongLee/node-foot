@@ -19,8 +19,8 @@ import {
 } from '../reducers/user';
 
 
-function loginAPI() {
-    return axios.post('/user/login');
+function loginAPI(data) {
+    return axios.post('/user/login', data);
 }
 
 

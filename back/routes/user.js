@@ -31,18 +31,17 @@ router.post('/', isNotLoggedIn, async (req, res, next) => { //POST /user/
 });
 
 router.post('/login', isNotLoggedIn, async (req, res, next) => { //POST /login
-
     passport.authenticate('local', (err, user, info) => {
         if (err) {
             console.error(err);
             return next(err);
         }
         if (info) {
+            console.error('info', info);
             return res.status(401).send(info.reason);
         }
         return req.login(user, async (loginErr) => {
             if (loginErr) {
-                console.error(loginErr);
                 return next(loginErr);
             }
             try {
