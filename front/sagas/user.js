@@ -1,5 +1,5 @@
 import { all, call, delay, put, takeLatest, fork } from "@redux-saga/core/effects"
-
+import axios from 'axios';
 import {
     LOG_IN_FAILURE,
     LOG_IN_REQUEST,
@@ -29,8 +29,8 @@ function loginOut() {
 }
 
 
-function signUpAPI() {
-    return axios.post('/api/signUp');
+function signUpAPI(data) {
+    return axios.post('/user', data);
 }
 
 function uploadImageAPI() {
@@ -42,7 +42,6 @@ function uploadAPI() {
 }
 
 function* logIn(action) {
-    console.log('saga>user>login>action', action);
     try {
         // yield call(loginAPI, action.data);
         yield delay(1000);
@@ -61,7 +60,6 @@ function* logIn(action) {
 
 
 function* logOut(action) {
-    console.log('saga LOGOUT ACTION', action);
     try {
         // yield call(loginOut, action.data);
         yield put({
@@ -77,10 +75,10 @@ function* logOut(action) {
     }
 }
 
-function* signUp() {
+function* signUp(action) {
     try {
-        // const result = yield call(signUp);
-        yield delay(1000);
+        console.log('action!!!', action)
+        const result = yield call(signUpAPI, action.data);
         yield put({
             type: SIGN_UP_SUCCESS,
         })

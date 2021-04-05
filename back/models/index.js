@@ -8,7 +8,7 @@ const db = {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-db.sequelize = sequelize;
+
 db.User = User;
 db.Room = Room;
 
@@ -18,5 +18,6 @@ Room.init(sequelize);
 User.associate(db);
 Room.associate(db);
 
+db.sequelize = sequelize;
 
 module.exports = db;
