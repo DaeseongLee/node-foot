@@ -29,6 +29,7 @@ router.post('/', isNotLoggedIn, async (req, res, next) => { //POST /user/
         console.error(e);
         next(error);
     }
-})
+});
+
 
 module.exports = router;

@@ -20,7 +20,7 @@ import {
 
 
 function loginAPI() {
-    return axios.post('/api/user');
+    return axios.post('/user/login');
 }
 
 
@@ -43,11 +43,11 @@ function uploadAPI() {
 
 function* logIn(action) {
     try {
-        // yield call(loginAPI, action.data);
-        yield delay(1000);
+        const result = yield call(loginAPI, action.data);
+        console.log('login Success', result);
         yield put({
             type: LOG_IN_SUCCESS,
-            data: action.data
+            data: result.data
         })
     } catch (error) {
         console.error(error);
@@ -77,7 +77,7 @@ function* logOut(action) {
 
 function* signUp(action) {
     try {
-        console.log('action!!!', action)
+
         const result = yield call(signUpAPI, action.data);
         yield put({
             type: SIGN_UP_SUCCESS,

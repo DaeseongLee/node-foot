@@ -34,10 +34,10 @@ const Login = () => {
         }
 
         if (loginUser) {
-            Router.push('/');
+            Router.replace('/');
         }
 
-    }, [loginUser])
+    }, [loginUser, logInError])
 
     const handleSubmit = useCallback((event) => {
         event.preventDefault();

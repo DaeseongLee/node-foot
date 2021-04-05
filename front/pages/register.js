@@ -34,17 +34,20 @@ const Register = () => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { loginUser, signUpLoading, signUpError } = useSelector(state => state.user);
+    const { loginUser, signUpLoading, signUpError, signUpDone } = useSelector(state => state.user);
 
     useEffect(() => {
         if (loginUser) {
-            alert('로그인된 상태이기때문에 메인페이지로 이동합니다')
             Router.push('/');
         }
         if (signUpError) {
             alert(signUpError);
         }
-    }, [loginUser, signUpError])
+        if (signUpDone) {
+            alert('회원가입 되었습니다 \n 로그인 페이지로 이동합니다.');
+            Router.replace('/login');
+        }
+    }, [loginUser, signUpError, signUpDone])
 
     const handleSubmit = useCallback((event) => {
         event.preventDefault();
