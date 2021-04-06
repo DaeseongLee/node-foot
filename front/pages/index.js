@@ -71,7 +71,7 @@ export default function Home() {
 
     useEffect(() => {
         if (!loginUser) {
-            Router.push('/login');
+            Router.replace('/login');
         }
         dispatch({
             type: LOAD_ROOMLIST_REQUEST,

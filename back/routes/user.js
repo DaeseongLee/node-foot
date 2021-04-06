@@ -1,11 +1,34 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const { User, Room } = require('../models');
 const { isNotLoggedIn, isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
+
+try {
+    fs.readdirSync('userUploads')
+} catch (error) {
+    console.error(error);
+    fs.mkdirSync('userUploads');
+}
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination(req, file, cb) {
+            cb(null, 'userUploads/');
+        },
+        filename(req, file, cb) {
+            const ext = path.extname(file.originalname);
+            cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+        },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 },
+});
 
 router.post('/', isNotLoggedIn, async (req, res, next) => { //POST /user/ 
     try {
@@ -30,6 +53,8 @@ router.post('/', isNotLoggedIn, async (req, res, next) => { //POST /user/
     }
 });
 
+
+
 router.post('/login', isNotLoggedIn, async (req, res, next) => { //POST /login
     passport.authenticate('local', (err, user, info) => {
         if (err) {
@@ -37,7 +62,6 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => { //POST /login
             return next(err);
         }
         if (info) {
-            console.error('info', info);
             return res.status(401).send(info.reason);
         }
         return req.login(user, async (loginErr) => {
@@ -66,20 +90,38 @@ router.post('/logout', isLoggedIn, async (req, res) => {
     res.send('ok');
 });
 
+router.post('/uploadImage', isLoggedIn, upload.single('image'), async (req, res, next) => {
+
+
+    res.json(`${req.file.filename}`);
+
+});
+
 router.patch('/upload', isLoggedIn, async (req, res) => {
     try {
-        const { email, name, password, phone, introduce } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 12);
-        const updateUser = await User.update({
-            name,
-            password: hashedPassword,
-            phone,
-            introduce,
-        }, {
+        const { email, name, password, phone, introduce, imagePath } = req.body;
+        let updateObject = {}
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 12);
+            updateObject = {
+                name,
+                password: hashedPassword,
+                phone,
+                introduce,
+                imagePath
+            }
+        } else {
+            updateObject = {
+                name,
+                phone,
+                introduce,
+                imagePath
+            }
+        }
+        await User.update(updateObject, {
             where: { id: req.user.id },
         })
-        console.log('uploadUser!!!', updateUser);
-        res.status(200).json({ email, name, password, phone, introduce });
+        res.status(200).json({ email, name, phone, introduce });
     } catch (error) {
         console.error(error);
         next(error);

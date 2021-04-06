@@ -33,8 +33,8 @@ function signUpAPI(data) {
     return axios.post('/user', data);
 }
 
-function uploadImageAPI() {
-    return axios.post('/api/uploadImage');
+function uploadImageAPI(data) {
+    return axios.post('/user/uploadImage', data);
 }
 
 function uploadAPI(data) {
@@ -57,7 +57,7 @@ function* logIn(action) {
 }
 
 
-function* logOut(action) {
+function* logOut() {
     try {
         yield call(logOutAPI);
         yield put({
@@ -89,12 +89,10 @@ function* signUp(action) {
 
 function* uploadImage(action) {
     try {
-        // const result = yield call(uploadImageAPI, action.data);
-        yield delay(1000);
-        console.log('sagaUploadImage', action.data);
+        const result = yield call(uploadImageAPI, action.data);
         yield put({
             type: UPLOAD_USERIMAGE_SUCCESS,
-            data: action.data,
+            data: result.data,
         })
     } catch (error) {
         console.error(error);

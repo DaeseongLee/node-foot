@@ -1,5 +1,6 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
 
 import { UPLOAD_REQUEST, UPLOAD_USERIMAGE_REQUEST } from '../reducers/user';
 import useInput from '../hooks/useInput';
@@ -59,8 +60,8 @@ function generate(element) {
 
 const Profile = () => {
     const dispatch = useDispatch();
-    const { imageName, uploadLoading, loginUser } = useSelector(state => state.user);
-
+    const { image, uploadLoading, loginUser } = useSelector(state => state.user);
+    const imagePath = loginUser?.imagePath;
     const email = loginUser?.email;
     const [name, setName, handleName] = useInput(loginUser?.name);
     const [password, setPassword, handlePassword] = useInput(loginUser?.password);
@@ -74,7 +75,11 @@ const Profile = () => {
     const classes = useStyles();
     const imageInput = useRef();
 
-
+    useEffect(() => {
+        if (!loginUser) {
+            Router.replace('/login');
+        }
+    }, [loginUser])
 
     const handleImageInput = useCallback(() => {
         imageInput.current.click();
@@ -82,7 +87,6 @@ const Profile = () => {
     )
 
     const onChangeImages = useCallback((e) => {
-        console.log('image', e.target.files);
         const imageFormData = new FormData();
         imageFormData.append('image', e.target.files[0]);
         // for (var key of imageFormData.keys()) {
@@ -101,7 +105,7 @@ const Profile = () => {
     const handleSubmit = useCallback((event) => {
         event.preventDefault();
         setEmptyError(false);
-        if (!(name && password && passwordConfirm && phone)) {
+        if (!(name && phone)) {
             return setEmptyError(true);
         };
 
@@ -118,10 +122,10 @@ const Profile = () => {
                 password,
                 phone,
                 introduce,
+                imagePath: imagePath,
             }
         })
-    }, [name, password, passwordConfirm, phone, introduce])
-
+    }, [name, password, passwordConfirm, phone, introduce, imagePath])
     return (
         <AppLayout>
             <div className={classes.profile}>
@@ -134,7 +138,7 @@ const Profile = () => {
                                 component="img"
                                 alt="Contemplative Reptile"
                                 height="140"
-                                image="https://source.unsplash.com/random"
+                                image={`http://localhost:3065/${imagePath}`}
                                 title="Contemplative Reptile"
                             />
                             <Button size="small" color="primary" onClick={handleImageInput}>이미지업로드</Button>

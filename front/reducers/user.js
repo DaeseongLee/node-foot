@@ -16,7 +16,7 @@ export const initialState = {
     uploadLoading: false,
     uploadDone: false,
     uploadError: null,
-    imageName: null,
+    image: null,
     loginUser: null,
 }
 
@@ -104,7 +104,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case UPLOAD_USERIMAGE_SUCCESS:
             draft.uploadImageLoading = false;
             draft.uploadImageDone = true;
-            draft.imageName = action.data;
+            draft.loginUser.imagePath = action.data;
             break;
         case UPLOAD_USERIMAGE_FAILURE:
             draft.uploadImageLoading = false;
