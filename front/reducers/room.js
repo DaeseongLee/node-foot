@@ -4,6 +4,9 @@ export const initialize = {
     makeLoading: false,
     makeDone: false,
     makeError: null,
+    loadLoading: false,
+    loadDone: false,
+    loadError: null,
     Rooms: null,
 }
 
@@ -11,18 +14,10 @@ export const MAKE_ROOM_REQUEST = 'MAKE_ROOM_REQUEST';
 export const MAKE_ROOM_SUCCESS = 'MAKE_ROOM_SUCCESS';
 export const MAKE_ROOM_FAILURE = 'MAKE_ROOM_FAILURE';
 
-const dummyRooms = (data) => {
-    console.log('dummyRooms', data);
-    return ({
-        ...data,
-        location: '복현풋살장',
-        date: '2021-03-30',
-        startTime: '09:00',
-        endTime: '18:00',
-        number: '16',
-        notion: '늦지 않게 오세요'
-    })
-}
+export const LOAD_ROOMLIST_REQUEST = 'LOAD_ROOMLIST_REQUEST';
+export const LOAD_ROOMLIST_SUCCESS = 'LOAD_ROOMLIST_SUCCESS';
+export const LOAD_ROOMLIST_FAILURE = 'MAKE_ROOMLIST_FAILURE';
+
 
 const reducer = (state = initialize, action) => produce(state, (draft) => {
     switch (action.type) {
@@ -39,6 +34,20 @@ const reducer = (state = initialize, action) => produce(state, (draft) => {
         case MAKE_ROOM_FAILURE:
             draft.makeLoading = false;
             draft.makeError = action.error;
+            break;
+        case LOAD_ROOMLIST_REQUEST:
+            draft.loadLoading = true;
+            draft.loadDone = false;
+            draft.loadError = null;
+            break;
+        case LOAD_ROOMLIST_SUCCESS:
+            draft.loadLoading = false;
+            draft.loadDone = true;
+            draft.Rooms = action.data;
+            break;
+        case LOAD_ROOMLIST_FAILURE:
+            draft.loadLoading = false;
+            draft.loadError = action.error;
             break;
         default:
             break;

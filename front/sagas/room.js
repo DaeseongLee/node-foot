@@ -1,12 +1,42 @@
 import { all, call, fork, delay, put, takeLatest } from '@redux-saga/core/effects';
-import { MAKE_ROOM_FAILURE, MAKE_ROOM_SUCCESS, MAKE_ROOM_REQUEST } from '../reducers/room';
+import axios from 'axios';
+import {
+    MAKE_ROOM_FAILURE,
+    MAKE_ROOM_SUCCESS,
+    MAKE_ROOM_REQUEST,
+    LOAD_ROOMLIST_REQUEST,
+    LOAD_ROOMLIST_SUCCESS,
+    LOAD_ROOMLIST_FAILURE
+} from '../reducers/room';
+
+
+function loadRoomListAPI() {
+    return axios.get('/room');
+}
 
 function makeRoomAPI(data) {
     return axios.post('/api/room');
 }
 
+
+function* loadRoomList() {
+    try {
+        const result = yield call(loadRoomListAPI);
+        console.log('loadRoomList in Saga', result);
+        yield put({
+            type: LOAD_ROOMLIST_SUCCESS,
+            data: result.data,
+        })
+    } catch (error) {
+        console.error(error);
+        yield put({
+            type: LOAD_ROOMLIST_FAILURE,
+            error: error.response.data,
+        })
+    }
+}
+
 function* makeRoom(action) {
-    console.log('makeRoom', action);
     try {
         // const result = yield call(makeRoomAPI, action.data);
         yield delay(1000);
@@ -23,11 +53,17 @@ function* makeRoom(action) {
     }
 }
 
+function* watchRoomList() {
+    yield takeLatest(LOAD_ROOMLIST_REQUEST, loadRoomList);
+}
+
 function* watchMake() {
     yield takeLatest(MAKE_ROOM_REQUEST, makeRoom);
 }
+
 export default function* roomSaga() {
     yield all([
         fork(watchMake),
+        fork(watchRoomList),
     ])
 }

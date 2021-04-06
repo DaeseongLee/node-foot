@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const path = require('path');
 
 const userRouter = require('./routes/user');
+const roomRouter = require('./routes/room');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
@@ -47,6 +48,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/user', userRouter);
+app.use('/room', roomRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
+import { LOAD_ROOMLIST_REQUEST } from '../reducers/room';
 
 import AppLayout from '../components/AppLayout';
 
@@ -14,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from 'next/link';
+
 
 function Copyright() {
     return (
@@ -65,11 +67,14 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 export default function Home() {
     const classes = useStyles();
     const { loginUser } = useSelector(state => state.user);
-
+    const dispatch = useDispatch();
     useEffect(() => {
         if (!loginUser) {
             Router.push('/login');
         }
+        dispatch({
+            type: LOAD_ROOMLIST_REQUEST,
+        })
     }, [loginUser]);
 
     return (
@@ -97,7 +102,7 @@ export default function Home() {
                                     <CardActions>
                                         <Link href="/roomDetail">
                                             <Button size="small" color="primary" >
-                                                방 들어가기
+                                                참가하기
                                             </Button>
                                         </Link>
                                     </CardActions>
