@@ -1,8 +1,9 @@
 import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
-import { LOAD_ROOMLIST_REQUEST } from '../reducers/room';
+import moment from 'moment';
 
+import { LOAD_ROOMLIST_REQUEST } from '../reducers/room';
 import AppLayout from '../components/AppLayout';
 
 import Button from '@material-ui/core/Button';
@@ -62,12 +63,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 export default function Home() {
     const classes = useStyles();
     const { loginUser } = useSelector(state => state.user);
+    const { Rooms } = useSelector(state => state.room);
     const dispatch = useDispatch();
+    console.log('index rooms!!!', Rooms);
     useEffect(() => {
         if (!loginUser) {
             Router.push('/login');
@@ -83,21 +84,24 @@ export default function Home() {
                 <Container className={classes.cardGrid} maxWidth="md">
                     {/* End hero unit */}
                     <Grid container spacing={4}>
-                        {cards.map((card) => (
-                            <Grid item key={card} xs={12} sm={6} md={4}>
+                        {Rooms && Rooms.map((room) => (
+                            <Grid item key={room.id} xs={12} sm={6} md={4}>
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image="https://source.unsplash.com/random"
+                                        image={`https://source.unsplash.com/random/${room.id}/?soccer`}
                                         title="Image title"
                                     />
                                     <CardContent className={classes.cardContent}>
                                         <Typography gutterBottom variant="h5" component="h2">
-                                            Heading
+                                            {room.place}
                                         </Typography>
                                         <Typography>
-                                            This is a media card. You can use this section to describe the content.
-                                            </Typography>
+                                            {moment(room.date).format('yyyy-MM-DD')}
+                                        </Typography>
+                                        <Typography>
+                                            {room.startTime} ~ {room.endTime}
+                                        </Typography>
                                     </CardContent>
                                     <CardActions>
                                         <Link href="/roomDetail">

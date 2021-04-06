@@ -7,7 +7,7 @@ export const initialize = {
     loadLoading: false,
     loadDone: false,
     loadError: null,
-    Rooms: null,
+    Rooms: [],
 }
 
 export const MAKE_ROOM_REQUEST = 'MAKE_ROOM_REQUEST';
@@ -29,7 +29,7 @@ const reducer = (state = initialize, action) => produce(state, (draft) => {
         case MAKE_ROOM_SUCCESS:
             draft.makeLoading = false;
             draft.makeDone = true;
-            draft.Rooms = dummyRooms(action.data);
+            draft.Rooms = action.data;
             break;
         case MAKE_ROOM_FAILURE:
             draft.makeLoading = false;

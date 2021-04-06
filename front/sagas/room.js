@@ -15,14 +15,13 @@ function loadRoomListAPI() {
 }
 
 function makeRoomAPI(data) {
-    return axios.post('/api/room');
+    return axios.post('/room', data);
 }
 
 
 function* loadRoomList() {
     try {
         const result = yield call(loadRoomListAPI);
-        console.log('loadRoomList in Saga', result);
         yield put({
             type: LOAD_ROOMLIST_SUCCESS,
             data: result.data,
@@ -38,11 +37,11 @@ function* loadRoomList() {
 
 function* makeRoom(action) {
     try {
-        // const result = yield call(makeRoomAPI, action.data);
-        yield delay(1000);
+        const result = yield call(makeRoomAPI, action.data);
+        console.log('makeRoom', result);
         yield put({
             type: MAKE_ROOM_SUCCESS,
-            data: action.data,
+            data: result.data,
         })
     } catch (error) {
         console.error(error);

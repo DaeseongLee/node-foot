@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { MAKE_ROOM_REQUEST } from '../reducers/room';
 
 const MakeRoom = ({ open, setClose }) => {
-    const [location, setlocation, handleLocation] = useInput('')
+    const [place, setPlace, handlePlace] = useInput('')
     const [date, setDate, handleDate] = useInput(moment().format('yyyy-MM-DD'))
     const [startTime, setStartTime, handleStartTime] = useInput(moment().format('HH:00'));
     const [endTime, setEndTime, handleEndTime] = useInput(moment().add(2, 'h').format('HH:00'));
@@ -27,7 +27,7 @@ const MakeRoom = ({ open, setClose }) => {
         dispatch({
             type: MAKE_ROOM_REQUEST,
             data: {
-                location,
+                place,
                 date,
                 startTime,
                 endTime,
@@ -36,7 +36,7 @@ const MakeRoom = ({ open, setClose }) => {
             }
         })
 
-    }, [location, date, startTime, endTime, number, notion]);
+    }, [place, date, startTime, endTime, number, notion]);
 
     const handleClose = useCallback(() => {
         setClose(false);
@@ -49,12 +49,12 @@ const MakeRoom = ({ open, setClose }) => {
                     <Grid item xs={12} sm={12}>
                         <TextField
                             required
-                            id="location"
-                            name="location"
-                            label="Location"
+                            id="place"
+                            name="place"
+                            label="Place"
                             fullWidth
-                            autoComplete="location"
-                            onChange={handleLocation}
+                            autoComplete="place"
+                            onChange={handlePlace}
                         />
                     </Grid>
                     <Grid item xs={12} sm={4}>
