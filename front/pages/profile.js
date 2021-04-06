@@ -60,12 +60,13 @@ function generate(element) {
 const Profile = () => {
     const dispatch = useDispatch();
     const { imageName, uploadLoading, loginUser } = useSelector(state => state.user);
-    console.log('name', loginUser)
+
     const email = loginUser?.email;
     const [name, setName, handleName] = useInput(loginUser?.name);
     const [password, setPassword, handlePassword] = useInput(loginUser?.password);
     const [passwordConfirm, setPasswordConfirm, handlePasswordConfirm] = useInput(loginUser?.password);
     const [phone, setPhone, handlePhone] = useInput(loginUser?.phone);
+    const [introduce, setIntroduce, handleIntroduce] = useInput(loginUser?.introduce);
 
     const [emptyError, setEmptyError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
@@ -95,7 +96,6 @@ const Profile = () => {
             type: UPLOAD_USERIMAGE_REQUEST,
             data: imageFormData,
         });
-
     }, [])
 
     const handleSubmit = useCallback((event) => {
@@ -117,9 +117,10 @@ const Profile = () => {
                 name,
                 password,
                 phone,
+                introduce,
             }
         })
-    }, [name, password, passwordConfirm, phone])
+    }, [name, password, passwordConfirm, phone, introduce])
 
     return (
         <AppLayout>
@@ -185,6 +186,18 @@ const Profile = () => {
                                             defaultValue={phone}
                                             fullWidth
                                             onChange={handlePhone}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={12}>
+                                        <TextField
+                                            required
+                                            id="introduce"
+                                            name="introduce"
+                                            type="text"
+                                            label="Introduce"
+                                            defaultValue={introduce}
+                                            fullWidth
+                                            onChange={handleIntroduce}
                                         />
                                     </Grid>
                                 </Grid>

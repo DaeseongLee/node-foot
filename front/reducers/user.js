@@ -118,7 +118,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case UPLOAD_SUCCESS:
             draft.uploadLoading = false;
             draft.uploadDone = true;
-            draft.loginUser = action.data;
+            draft.loginUser.name = action.data.name;
+            draft.loginUser.phone = action.data.phone;
+            draft.loginUser.introduce = action.data.introduce;
             break;
         case UPLOAD_FAILURE:
             draft.uploadLoading = false;

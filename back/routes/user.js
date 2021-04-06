@@ -66,4 +66,24 @@ router.post('/logout', isLoggedIn, async (req, res) => {
     res.send('ok');
 });
 
+router.patch('/upload', isLoggedIn, async (req, res) => {
+    try {
+        const { email, name, password, phone, introduce } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 12);
+        const updateUser = await User.update({
+            name,
+            password: hashedPassword,
+            phone,
+            introduce,
+        }, {
+            where: { id: req.user.id },
+        })
+        console.log('uploadUser!!!', updateUser);
+        res.status(200).json({ email, name, password, phone, introduce });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
 module.exports = router;

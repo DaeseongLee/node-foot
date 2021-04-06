@@ -38,7 +38,6 @@ function* loadRoomList() {
 function* makeRoom(action) {
     try {
         const result = yield call(makeRoomAPI, action.data);
-        console.log('makeRoom', result);
         yield put({
             type: MAKE_ROOM_SUCCESS,
             data: result.data,

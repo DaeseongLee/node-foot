@@ -37,8 +37,8 @@ function uploadImageAPI() {
     return axios.post('/api/uploadImage');
 }
 
-function uploadAPI() {
-    return axios.post('/api/upload');
+function uploadAPI(data) {
+    return axios.patch('/user/upload', data);
 }
 
 function* logIn(action) {
@@ -107,11 +107,11 @@ function* uploadImage(action) {
 
 function* upload(action) {
     try {
-        // const result = yield call(uploadAPI, action.data);
-        yield delay(1000);
+        const result = yield call(uploadAPI, action.data);
+
         yield put({
             type: UPLOAD_SUCCESS,
-            data: action.data,
+            data: result.data,
         })
     } catch (error) {
         console.error(error);

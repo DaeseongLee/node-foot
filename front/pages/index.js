@@ -68,7 +68,7 @@ export default function Home() {
     const { loginUser } = useSelector(state => state.user);
     const { Rooms } = useSelector(state => state.room);
     const dispatch = useDispatch();
-    console.log('index rooms!!!', Rooms);
+
     useEffect(() => {
         if (!loginUser) {
             Router.push('/login');
@@ -94,13 +94,13 @@ export default function Home() {
                                     />
                                     <CardContent className={classes.cardContent}>
                                         <Typography gutterBottom variant="h5" component="h2">
-                                            {room.place}
+                                            장소: {room.place}
                                         </Typography>
                                         <Typography>
-                                            {moment(room.date).format('yyyy-MM-DD')}
+                                            날짜: {moment(room.date).format('yyyy-MM-DD')}
                                         </Typography>
                                         <Typography>
-                                            {room.startTime} ~ {room.endTime}
+                                            시간: {room.startTime} ~ {room.endTime}
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
