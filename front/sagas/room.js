@@ -10,6 +10,9 @@ import {
     LOAD_ROOMDETAIL_REQUEST,
     LOAD_ROOMDETAIL_SUCCESS,
     LOAD_ROOMDETAIL_FAILURE,
+    JOIN_ROOM_REQUEST,
+    JOIN_ROOM_SUCCESS,
+    JOIN_ROOM_FAILURE,
 } from '../reducers/room';
 
 
@@ -26,6 +29,11 @@ function makeRoomAPI(data) {
 function roomDetailAPI(data) {
     return axios.post('/room/roomDetail', data);
 }
+
+function roomJoinAPI(data) {
+    return axios.post('/room/roomJoin', data);
+}
+
 
 function* loadRoomList() {
     try {
@@ -75,6 +83,24 @@ function* roomDetail(action) {
     }
 }
 
+function* roomJoin(action) {
+    try {
+        const result = yield call(roomJoinAPI, action.data);
+        yield put({
+            type: JOIN_ROOM_SUCCESS,
+            data: result.data,
+        })
+    } catch (error) {
+        console.error(error);
+        yield put({
+            type: JOIN_ROOM_FAILURE,
+            error: error.response.data,
+        })
+    }
+}
+
+
+
 
 function* watchRoomList() {
     yield takeLatest(LOAD_ROOMLIST_REQUEST, loadRoomList);
@@ -88,10 +114,15 @@ function* watchRoomDetail() {
     yield takeLatest(LOAD_ROOMDETAIL_REQUEST, roomDetail);
 }
 
+function* watchRoomJoin() {
+    yield takeLatest(JOIN_ROOM_REQUEST, roomJoin);
+}
+
 export default function* roomSaga() {
     yield all([
         fork(watchMake),
         fork(watchRoomList),
         fork(watchRoomDetail),
+        fork(watchRoomJoin),
     ])
 }

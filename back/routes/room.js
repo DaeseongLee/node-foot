@@ -9,12 +9,16 @@ router.get('/', isLoggedIn, async (req, res, next) => {
     try {
         const where = {};
         const rooms = await Room.findAll({
-            attributes: ['id', 'date', 'place', 'startTime', 'endTime'],
+            attributes: ['id', 'date', 'place', 'startTime', 'endTime', 'number'],
             where,
             order: [
                 ['startTime', 'DESC'],
                 ['createdAt', 'DESC']
             ],
+            include: [{
+                model: User,
+                as: 'Joiner',
+            }]
         });
         res.status(200).json(rooms);
     } catch (error) {
@@ -65,7 +69,7 @@ router.post('/roomDetail', isLoggedIn, async (req, res, next) => {
             where: { id: req.body.id },
             include: [{
                 model: User,
-                attributes: ['id', 'name', 'email'],
+                attributes: ['id', 'name', 'email', 'imagePath'],
                 as: 'Joiner',
                 order: [
                     ['createdAt', 'DESC']
@@ -73,6 +77,24 @@ router.post('/roomDetail', isLoggedIn, async (req, res, next) => {
             }]
         });
         res.status(200).json(roomDetail);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+})
+
+router.post('/roomJoin', isLoggedIn, async (req, res, next) => {
+    try {
+        const { roomId, userId } = req.body;
+        //방생성
+        const room = await Room.findOne({
+            where: { id: roomId },
+        });
+        const joiner = await room.getJoiner();
+        if (joiner.findIndex(user => user.id === userId) === -1) {
+            room.addJoiner(userId);
+        }
+        res.status(200).json({ RoomId: roomId });
     } catch (error) {
         console.error(error);
         next(error);

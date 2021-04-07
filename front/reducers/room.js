@@ -13,6 +13,9 @@ export const initialize = {
     RoomId: null,
     Rooms: [],
     RoomDetail: null,
+    joinLoading: false,
+    joinDone: false,
+    joinError: null,
 }
 
 export const MAKE_ROOM_REQUEST = 'MAKE_ROOM_REQUEST';
@@ -26,6 +29,10 @@ export const LOAD_ROOMLIST_FAILURE = 'MAKE_ROOMLIST_FAILURE';
 export const LOAD_ROOMDETAIL_REQUEST = 'LOAD_ROOMDETAIL_REQUEST';
 export const LOAD_ROOMDETAIL_SUCCESS = 'LOAD_ROOMDETAIL_SUCCESS';
 export const LOAD_ROOMDETAIL_FAILURE = 'MAKE_ROOMDETAIL_FAILURE';
+
+export const JOIN_ROOM_REQUEST = 'JOIN_ROOM_REQUEST';
+export const JOIN_ROOM_SUCCESS = 'JOIN_ROOM_SUCCESS';
+export const JOIN_ROOM_FAILURE = 'JOIN_ROOM_FAILURE';
 
 
 
@@ -73,6 +80,20 @@ const reducer = (state = initialize, action) => produce(state, (draft) => {
         case LOAD_ROOMDETAIL_FAILURE:
             draft.roomDetailDone = false;
             draft.roomDetailError = action.error;
+            break;
+        case JOIN_ROOM_REQUEST:
+            draft.joinLoading = true;
+            draft.joinDone = false;
+            draft.joinError = null;
+            break;
+        case JOIN_ROOM_SUCCESS:
+            draft.joinLoading = false;
+            draft.joinDone = true;
+            draft.RoomId = action.data;
+            break;
+        case JOIN_ROOM_FAILURE:
+            draft.joinLoading = false;
+            draft.joinError = action.error;
             break;
         default:
             break;

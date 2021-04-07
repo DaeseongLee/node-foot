@@ -75,15 +75,12 @@ const useStyles = makeStyles((theme) => ({
         width: 160,
 
     },
-    join: {
-        marginRight: '1rem',
-    },
+    host: {
+        backgroundColor: 'tomato',
+    }
 
 }));
 
-function createData(id, name, desc) {
-    return { id, name, desc };
-}
 export default function FeaturedPost() {
     const classes = useStyles();
     const matches = useMediaQuery('(max-width:48rem)');
@@ -123,8 +120,7 @@ export default function FeaturedPost() {
                     <div className={classes.grid} >
                         {RoomDetail?.Joiner.map(row =>
                             <div className={classes.item} key={row.id}>
-                                {RoomDetail?.roomMaker === row.id && <span style={{ color: 'red' }}>방장</span>}
-                                <Chip className={classes.itemList} avatar={<Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />}
+                                <Chip className={RoomDetail?.roomMaker !== row.id ? classes.itemList : classes.host} avatar={<Avatar alt="Natacha" src={`http://localhost:3065/${row.imagePath}`} />}
                                     label={row.name}
                                     onDelete={handleDelete}
 
@@ -133,15 +129,6 @@ export default function FeaturedPost() {
                         )}
                     </div>
                     <div className={classes.btn}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={false}
-                            className={classes.join}
-                        >
-                            참가하기
-                    </Button>
                         <Button
                             type="submit"
                             variant="contained"

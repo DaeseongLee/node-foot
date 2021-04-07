@@ -1,9 +1,9 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 import moment from 'moment';
 
-import { LOAD_ROOMLIST_REQUEST } from '../reducers/room';
+import { LOAD_ROOMLIST_REQUEST, JOIN_ROOM_REQUEST } from '../reducers/room';
 import AppLayout from '../components/AppLayout';
 
 import Button from '@material-ui/core/Button';
@@ -61,14 +61,21 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(6),
     },
+    span: {
+        color: 'tomato'
+    }
 }));
 
 export default function Home() {
     const classes = useStyles();
+
+    // const [roomId, setRoomId] = useState(0);
+
     const { loginUser } = useSelector(state => state.user);
     const { Rooms, makeDone } = useSelector(state => state.room);
-    const dispatch = useDispatch();
 
+
+    const dispatch = useDispatch();
     useEffect(() => {
         if (!loginUser) {
             Router.replace('/login');
@@ -84,6 +91,16 @@ export default function Home() {
         }
     }, [makeDone]);
 
+    const handleJoin = useCallback((roomId) => {
+        dispatch({
+            type: JOIN_ROOM_REQUEST,
+            data: {
+                roomId,
+                userId: loginUser.id
+            }
+        });
+        Router.replace('/roomDetail');
+    }, []);
     return (
         <AppLayout>
             <main>
@@ -108,13 +125,16 @@ export default function Home() {
                                         <Typography>
                                             시간: {room.startTime} ~ {room.endTime}
                                         </Typography>
+                                        <Typography>
+                                            {room.Joiner.length === room.number && <span className={classes.span}>인원: {room.Joiner.length} / {room.number}</span>}
+                                            {room.Joiner.length !== room.number && <span >인원: {room.Joiner.length} / {room.number}</span>}
+                                        </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Link href="/roomDetail">
-                                            <Button size="small" color="primary" >
-                                                참가하기
-                                            </Button>
-                                        </Link>
+                                        <Button size="small" color="primary" disabled={room.Joiner.length === room.number}
+                                            onClick={() => handleJoin(room.id)}>
+                                            참가하기
+                                        </Button>
                                     </CardActions>
                                 </Card>
                             </Grid>
@@ -133,6 +153,6 @@ export default function Home() {
                 <Copyright />
             </footer>
             {/* End footer */}
-        </AppLayout>
+        </AppLayout >
     );
 }
