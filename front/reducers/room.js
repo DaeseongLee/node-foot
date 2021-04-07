@@ -16,6 +16,9 @@ export const initialize = {
     joinLoading: false,
     joinDone: false,
     joinError: null,
+    exitLoading: false,
+    exitDone: false,
+    exitError: null,
 }
 
 export const MAKE_ROOM_REQUEST = 'MAKE_ROOM_REQUEST';
@@ -34,6 +37,9 @@ export const JOIN_ROOM_REQUEST = 'JOIN_ROOM_REQUEST';
 export const JOIN_ROOM_SUCCESS = 'JOIN_ROOM_SUCCESS';
 export const JOIN_ROOM_FAILURE = 'JOIN_ROOM_FAILURE';
 
+export const EXIT_ROOM_REQUEST = 'EXIT_ROOM_REQUEST';
+export const EXIT_ROOM_SUCCESS = 'EXIT_ROOM_SUCCESS';
+export const EXIT_ROOM_FAILURE = 'EXIT_ROOM_FAILURE';
 
 
 const reducer = (state = initialize, action) => produce(state, (draft) => {
@@ -94,6 +100,19 @@ const reducer = (state = initialize, action) => produce(state, (draft) => {
         case JOIN_ROOM_FAILURE:
             draft.joinLoading = false;
             draft.joinError = action.error;
+            break;
+        case EXIT_ROOM_REQUEST:
+            draft.exitLoading = true;
+            draft.exitDone = false;
+            draft.exitError = null;
+            break;
+        case EXIT_ROOM_SUCCESS:
+            draft.exitLoading = false;
+            draft.exitDone = true;
+            break;
+        case EXIT_ROOM_FAILURE:
+            draft.exitLoading = false;
+            draft.exitError = action.error;
             break;
         default:
             break;

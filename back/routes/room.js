@@ -102,4 +102,21 @@ router.post('/roomJoin', isLoggedIn, async (req, res, next) => {
 })
 
 
+router.post('/roomExit', isLoggedIn, async (req, res, next) => {
+    try {
+        const { roomId, userId } = req.body;
+        //방생성
+        const room = await Room.findOne({
+            where: { id: roomId },
+        });
+        room.removeJoiner(userId);
+        res.status(200).send('ok');
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+})
+
+
+
 module.exports = router;

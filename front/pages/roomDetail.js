@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AppLayout from '../components/AppLayout';
@@ -9,7 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { LOAD_ROOMDETAIL_REQUEST } from '../reducers/room';
+import { LOAD_ROOMDETAIL_REQUEST, EXIT_ROOM_REQUEST } from '../reducers/room';
 import moment from 'moment';
 const useStyles = makeStyles((theme) => ({
     roomDetail: {
@@ -86,6 +87,7 @@ export default function FeaturedPost() {
     const matches = useMediaQuery('(max-width:48rem)');
     const handleDelete = () => { alert('강퇴합니다') };
     const { RoomId, RoomDetail } = useSelector(state => state.room);
+    const { loginUser } = useSelector(state => state.user);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -94,6 +96,17 @@ export default function FeaturedPost() {
             data: { id: RoomId.RoomId },
         })
     }, [RoomId])
+
+    const handleExit = useCallback(() => {
+        dispatch({
+            type: EXIT_ROOM_REQUEST,
+            data: {
+                roomId: RoomId.RoomId,
+                userId: loginUser.id
+            }
+        });
+        Router.replace('/');
+    }, []);
     return (
         <AppLayout>
             <div className={classes.roomDetail}>
@@ -134,6 +147,7 @@ export default function FeaturedPost() {
                             variant="contained"
                             color="primary"
                             disabled={false}
+                            onClick={handleExit}
                         >
                             나가기 {' '}
                         </Button>
