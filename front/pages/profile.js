@@ -1,8 +1,10 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
+import moment from 'moment';
 
-import { UPLOAD_REQUEST, UPLOAD_USERIMAGE_REQUEST } from '../reducers/user';
+import { UPLOAD_REQUEST, UPLOAD_USERIMAGE_REQUEST, UPDATE_ROOMLIST_REQUST } from '../reducers/user';
+import { JOIN_ROOM_REQUEST } from '../reducers/room';
 import useInput from '../hooks/useInput';
 
 import Grid from '@material-ui/core/Grid';
@@ -46,16 +48,12 @@ const useStyles = makeStyles((theme) => ({
     },
     valid: {
         color: 'red',
+    },
+    item: {
+        cursor: 'pointer',
     }
 }))
 
-function generate(element) {
-    return [0, 1, 2].map((value) =>
-        React.cloneElement(element, {
-            key: value,
-        }),
-    );
-}
 
 
 const Profile = () => {
@@ -63,6 +61,7 @@ const Profile = () => {
     const { image, uploadLoading, loginUser } = useSelector(state => state.user);
     const imagePath = loginUser?.imagePath;
     const email = loginUser?.email;
+    const gameRoom = loginUser?.GameRoom;
     const [name, setName, handleName] = useInput(loginUser?.name);
     const [password, setPassword, handlePassword] = useInput(loginUser?.password);
     const [passwordConfirm, setPasswordConfirm, handlePasswordConfirm] = useInput(loginUser?.password);
@@ -79,7 +78,14 @@ const Profile = () => {
         if (!loginUser) {
             Router.replace('/login');
         }
-    }, [loginUser])
+    }, [loginUser]);
+
+    useEffect(() => {
+        dispatch({
+            type: UPDATE_ROOMLIST_REQUST,
+            data: { id: loginUser.id }
+        });
+    }, []);
 
     const handleImageInput = useCallback(() => {
         imageInput.current.click();
@@ -89,13 +95,6 @@ const Profile = () => {
     const onChangeImages = useCallback((e) => {
         const imageFormData = new FormData();
         imageFormData.append('image', e.target.files[0]);
-        // for (var key of imageFormData.keys()) {
-        //     console.log('key', key);
-        // }
-
-        // for (var value of imageFormData.values()) {
-        //     console.log('value', value);
-        // }
         dispatch({
             type: UPLOAD_USERIMAGE_REQUEST,
             data: imageFormData,
@@ -126,6 +125,17 @@ const Profile = () => {
             }
         })
     }, [name, password, passwordConfirm, phone, introduce, imagePath])
+
+    const handleRoomClick = useCallback((id) => {
+        dispatch({
+            type: JOIN_ROOM_REQUEST,
+            data: {
+                roomId: id,
+                userId: loginUser.id
+            }
+        });
+        Router.replace('/roomDetail');
+    }, [])
     return (
         <AppLayout>
             <div className={classes.profile}>
@@ -227,16 +237,24 @@ const Profile = () => {
                             <Title>방 참가 리스트</Title>
                             <div className={classes.demo}>
                                 <List >
-                                    {generate(
-                                        <ListItem>
+                                    {gameRoom && gameRoom.map(row => (
+                                        <ListItem onClick={() => handleRoomClick(row.id)} className={classes.item}>
                                             <ListItemIcon>
                                                 <FolderIcon />
                                             </ListItemIcon>
                                             <ListItemText
-                                                primary="Single-line item"
+                                                primary={`장소:  ${row.place}`}
                                             />
-                                        </ListItem>,
-                                    )}
+                                            {'  '}
+                                            <ListItemText
+                                                primary={`날짜: ${moment(row.date).format('yyyy-MM-DD')}`}
+                                            />
+
+                                            <ListItemText
+                                                primary={`시간:  ${row.startTime} ~ ${row.endTime}`}
+                                            />
+                                        </ListItem>))
+                                    }
                                 </List>
                             </div>
                         </Grid>

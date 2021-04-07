@@ -74,7 +74,17 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => { //POST /login
                     where: { id: user.id },
                     attributes: {
                         exclude: ['password']
-                    }
+                    },
+                    include: [{
+                        model: Room,
+                        attributes: ['id', 'place', 'date', 'startTime', 'endTime'],
+                        as: 'GameRoom',
+                        order: [
+                            ['date', 'DESC'],
+                            ['startTime', 'DESC'],
+                        ]
+
+                    }]
                 })
                 return res.status(200).json(fullUserWithoutPassword);
             } catch (e) {
@@ -92,10 +102,7 @@ router.post('/logout', isLoggedIn, async (req, res) => {
 });
 
 router.post('/uploadImage', isLoggedIn, upload.single('image'), async (req, res, next) => {
-
-
     res.json(`${req.file.filename}`);
-
 });
 
 router.patch('/upload', isLoggedIn, async (req, res) => {
@@ -126,6 +133,20 @@ router.patch('/upload', isLoggedIn, async (req, res) => {
     } catch (error) {
         console.error(error);
         next(error);
+    }
+});
+
+router.post('/roomList', isLoggedIn, async (req, res, next) => {
+    try {
+        const { id } = req.body;
+        const user = await User.findOne({
+            where: { id }
+        });
+        const gameRoom = await user.getGameRoom();
+        res.status(201).json(gameRoom);
+    } catch (e) {
+        console.error(e);
+        next(e);
     }
 });
 

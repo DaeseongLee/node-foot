@@ -16,6 +16,9 @@ import {
     UPLOAD_REQUEST,
     UPLOAD_SUCCESS,
     UPLOAD_FAILURE,
+    UPDATE_ROOMLIST_REQUST,
+    UPDATE_ROOMLIST_SUCCESS,
+    UPDATE_ROOMLIST_FAILURE,
 } from '../reducers/user';
 
 
@@ -39,6 +42,10 @@ function uploadImageAPI(data) {
 
 function uploadAPI(data) {
     return axios.patch('/user/upload', data);
+}
+
+function roomListAPI(data) {
+    return axios.post('/user/roomList', data);
 }
 
 function* logIn(action) {
@@ -120,6 +127,23 @@ function* upload(action) {
     }
 }
 
+function* roomList(action) {
+    try {
+        const result = yield call(roomListAPI, action.data);
+        yield put({
+            type: UPDATE_ROOMLIST_SUCCESS,
+            data: result.data,
+        })
+    } catch (error) {
+        console.error(error);
+        yield put({
+            type: UPDATE_ROOMLIST_FAILURE,
+            error: error.response.data,
+        })
+    }
+}
+
+
 
 function* watchLogIn() {
     yield takeLatest(LOG_IN_REQUEST, logIn);
@@ -140,6 +164,10 @@ function* watchUpload() {
     yield takeLatest(UPLOAD_REQUEST, upload);
 }
 
+function* watchRoomList() {
+    yield takeLatest(UPDATE_ROOMLIST_REQUST, roomList);
+}
+
 export default function* userSaga() {
     yield all([
         fork(watchLogIn),
@@ -147,5 +175,6 @@ export default function* userSaga() {
         fork(watchSignUp),
         fork(watchImageUp),
         fork(watchUpload),
+        fork(watchRoomList),
     ])
 }

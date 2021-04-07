@@ -16,6 +16,9 @@ export const initialState = {
     uploadLoading: false,
     uploadDone: false,
     uploadError: null,
+    updateRoomListLoading: false,
+    updateRoomListDone: false,
+    updateRoomListError: null,
     image: null,
     loginUser: null,
 }
@@ -42,15 +45,10 @@ export const UPLOAD_REQUEST = 'UPLOAD_REQUEST';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 export const UPLOAD_FAILURE = 'UPLOAD_FAILURE';
 
-const dummyUser = (data) => ({
-    ...data,
-    email: 'hsl5539@gmail.com',
-    name: 'lee',
-    id: 1,
-    password: 1234,
-    phone: '01064190539',
-    Rooms: [{ id: 1 }],
-})
+export const UPDATE_ROOMLIST_REQUST = 'UPDATE_ROOMLIST_REQUEST';
+export const UPDATE_ROOMLIST_SUCCESS = 'UPDATE_ROOMLIST_SUCCESS';
+export const UPDATE_ROOMLIST_FAILURE = 'UPDATE_ROOMLIST_FAILURE';
+
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
     switch (action.type) {
@@ -125,6 +123,20 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case UPLOAD_FAILURE:
             draft.uploadLoading = false;
             draft.uploadError = action.error;
+            break;
+        case UPDATE_ROOMLIST_REQUST:
+            draft.updateRoomListLoading = true;
+            draft.updateRoomListDone = false;
+            draft.updateRoomListError = null;
+            break;
+        case UPDATE_ROOMLIST_SUCCESS:
+            draft.updateRoomListLoading = false;
+            draft.updateRoomListDone = true;
+            draft.loginUser.GameRoom = action.data;
+            break;
+        case UPDATE_ROOMLIST_FAILURE:
+            draft.updateRoomListLoading = false;
+            draft.updateRoomListError = action.error;
             break;
         default:
             break;
