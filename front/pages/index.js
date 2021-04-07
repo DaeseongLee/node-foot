@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
     const classes = useStyles();
     const { loginUser } = useSelector(state => state.user);
-    const { Rooms } = useSelector(state => state.room);
+    const { Rooms, makeDone } = useSelector(state => state.room);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -77,6 +77,12 @@ export default function Home() {
             type: LOAD_ROOMLIST_REQUEST,
         })
     }, [loginUser]);
+
+    useEffect(() => {
+        if (makeDone) {
+            Router.replace('/roomDetail');
+        }
+    }, [makeDone]);
 
     return (
         <AppLayout>

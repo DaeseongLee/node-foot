@@ -39,6 +39,6 @@ module.exports = class Room extends Sequelize.Model {
 
     static associate(db) {
         db.Room.belongsTo(db.User, { foreignKey: 'roomMaker', targetKey: 'id' });
-        db.Room.belongsToMany(db.User, { through: 'Participant' });
+        db.Room.belongsToMany(db.User, { through: 'Participant', as: 'Joiner', foreignKey: 'GameRoom' }); //room.addJoiner
     }
 }

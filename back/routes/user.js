@@ -38,6 +38,7 @@ router.post('/', isNotLoggedIn, async (req, res, next) => { //POST /user/
                 email
             }
         });
+
         if (exUser) return res.status(403).send('이미 존재하는 이메일입니다');
         const hashedPassword = await bcrypt.hash(password, 12);
         await User.create({
